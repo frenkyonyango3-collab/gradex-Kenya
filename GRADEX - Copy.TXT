@@ -1,0 +1,19 @@
+<body>
+
+<!-- LOGO MPYA YA GRADEX -->
+<div style="text-align:center; background:white; padding:15px; border-radius:15px; margin-bottom:15px; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+  <img src="logo.png" style="width:150px;">
+</div>
+
+<!-- HAPA NDIPO ILE CODE YAKO YA AWALI INAANZA... -->
+
+s<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GradeX - CBE NOTES 20 BOB</title>
+</head>
+<body>
+... (ile code yote nimeiweka tayari)
+</body>
+</html>
