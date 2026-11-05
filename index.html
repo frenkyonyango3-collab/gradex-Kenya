@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GradeX CBE Kenya - Pochi 0790777917</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--green:#0f5c2e;--light:#e8f5e9}
+body{font-family:Arial,sans-serif;background:var(--green);margin:0;padding:10px;color:#333}
+.card{background:white;padding:20px;border-radius:15px;max-width:700px;margin:15px auto;box-shadow:0 4px 10px rgba(0,0,0,0.2)}
+h1,h2{color:var(--green);margin-top:0}
+input{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #ccc;box-sizing:border-box;font-size:15px}
+button{background:var(--green);color:white;border:none;padding:13px;width:100%;border-radius:8px;font-weight:bold;cursor:pointer;margin:6px 0;font-size:15px}
+button.blue{background:#2196F3}
+button.red{background:#d32f2f}
+.pay-item{background:#f9f9f9;padding:12px;border-radius:8px;margin:10px 0;border-left:5px solid orange;font-size:14px;text-align:left}
+.approved{border-left-color:green !important;background:#e8f5e9 !important}
+.tabs{display:flex;gap:8px;margin-bottom:15px}
+.tab{flex:1;padding:10px;border-radius:20px;text-align:center;cursor:pointer;background:#f0f0f0;font-weight:bold}
+.tab.active{background:var(--green);color:white}
+.hidden{display:none}
+.header{text-align:center;color:white;margin:10px 0}
+.header b{color:#ffeb3b}
+.notice{background:#fff3cd;padding:10px;border-radius:8px;font-size:13px;margin:10px 0}
+.note-box{background:#e8f5e9;padding:15px;border-radius:10px;margin:10px 0;text-align:left}
+.note-box a{color:#0f5c2e;font-weight:bold}
+</style>
+</head>
+<body>
+<div class="header">
+<h1 style="color:white;margin-bottom:5px">📚 GradeX CBE Kenya</h1>
+<p>Pochi La Biashara: <b>0790777917</b> | Till 20 Bob</p>
+</div>
+<div class="card">
+<div class="tabs">
+<div class="tab active" id="tabHome" onclick="showTab('home')">🏠 Home / Lipa</div>
+<div class="tab" id="tabAdmin" onclick="showTab('adminLogin')">🔐 Admin</div>
+</div>
+
+<div id="homeSection">
+<h2>🔓 Fungua Notes</h2>
+<div class="notice"><b>Jinsi ya Kulipa:</b><br>1. Tuma <b>20</b> kwa Pochi <b>0790777917</b><br>2. Copy M-Pesa Code (mfano: <b>SHM...)</b><br>3. Weka hapa chini</div>
+<input type="tel" id="phone" placeholder="Namba yako ya M-Pesa (07...)">
+<input type="text" id="code" placeholder="M-Pesa Code (min 10 herufi)">
+<input type="hidden" id="amount" value="20">
+<button onclick="submitPayment()">✅ Thibitisha Malipo</button>
+<p id="payMsg"></p>
+</div>
+
+<div id="notesSection" class="hidden">
+<h2>🎉 Karibu! Notes Zako Hapa</h2>
+<p style="font-size:14px">Umelipa! Download hapa chini:</p>
+<div class="note-box">
+<b>📖 CBE Notes - Grade 7, 8, 9</b><br><br>
+<a href="#" onclick="alert('Weka link yako ya Google Drive hapa')">📥 Download Notes - PDF</a><br><br>
+<a href="#" onclick="alert('Weka link yako ya Google Drive hapa')">📥 Download Exams + Answers</a><br><br>
+<small>Namba yako: <span id="userPhoneShow"></span></small>
+</div>
+<button class="blue" onclick="logoutUser()">🚪 Toka / Badilisha Namba</button>
+<p style="font-size:12px;color:#888">Ukipoteza page, ingiza tena namba na code yako ile ile - itakufungulia mara moja.</p>
+</div>
+
+<div id="adminLoginSection" class="hidden">
+<h2>🔐 Admin Login</h2>
+<input type="password" id="adminPass" placeholder="Password">
+<button onclick="adminLogin()">Ingia</button>
+<p id="loginMsg" style="color:red"></p>
+</div>
+
+<div id="adminSection" class="hidden">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<h2>💰 Malipo LIVE</h2>
+<button onclick="adminLogout()" style="width:auto;background:red;padding:6px 12px">Logout</button>
+</div>
+<p style="font-size:12px">Pochi: <b>0790777917</b> | Sasa ni AUTOMATIC - Huhitaji ku-approve tena</p>
+<button class="blue" onclick="loadPayments()">🔄 Refresh Malipo</button>
+<div id="paymentsList" style="margin-top:15px">Loading...</div>
+</div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://ahvzvrtckmvmuunqzsbd.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_b8-uNT9cXOH2kVAULMp14w_3b62Le0A';
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+function showTab(name){
+document.getElementById('homeSection').classList.add('hidden');
+document.getElementById('adminLoginSection').classList.add('hidden');
+document.getElementById('adminSection').classList.add('hidden');
+document.getElementById('notesSection').classList.add('hidden');
+document.getElementById('tabHome').classList.remove('active');
+document.getElementById('tabAdmin').classList.remove('active');
+if(name==='home'){
+  // Kama user ashaingia, mwonyeshe notes moja kwa moja
+  if(localStorage.getItem('paidPhone')){
+    openNotes(localStorage.getItem('paidPhone'));
+  } else {
+    document.getElementById('homeSection').classList.remove('hidden');
+  }
+  document.getElementById('tabHome').classList.add('active');
+} else if(name==='adminLogin'){
+  if(localStorage.getItem('isAdmin')==='true'){
+    document.getElementById('adminSection').classList.remove('hidden');
+    document.getElementById('tabAdmin').classList.add('active');
+    loadPayments();
+  } else {
+    document.getElementById('adminLoginSection').classList.remove('hidden');
+    document.getElementById('tabAdmin').classList.add('active');
+  }
+}
+}
+
+function openNotes(phone){
+  document.getElementById('homeSection').classList.add('hidden');
+  document.getElementById('notesSection').classList.remove('hidden');
+  document.getElementById('userPhoneShow').innerText = phone || '';
+}
+
+function logoutUser(){
+  localStorage.removeItem('paidPhone');
+  document.getElementById('notesSection').classList.add('hidden');
+  document.getElementById('homeSection').classList.remove('hidden');
+}
+
+async function submitPayment(){
+let phone=document.getElementById('phone').value.trim();
+let code=document.getElementById('code').value.trim().toUpperCase();
+let amount=document.getElementById('amount').value;
+let msg=document.getElementById('payMsg');
+if(!phone||phone.length<10){msg.innerHTML='<span style=color:red>❌ Weka namba sahihi</span>';return;}
+if(!code||code.length<10){msg.innerHTML='<span style=color:red>❌ Code ni fupi! Lazima min 10 herufi. Weka code halisi ya M-Pesa</span>';return;}
+msg.innerHTML='⏳ Inathibitisha...';
+try{
+  // 1. Angalia kama code hii ishatumika
+  let {data} = await supabaseClient.from('payments').select('*').eq('code',code).limit(1);
+  if(data && data.length>0){
+    // Kama ni yule yule mteja - mruhusu aingie, usimzuie!
+    if(data[0].phone === phone){
+      // Kama bado pending, ibadilishe iwe approved automatic
+      if(data[0].status !== 'approved'){
+        await supabaseClient.from('payments').update({status:'approved'}).eq('code',code);
+      }
+      localStorage.setItem('paidPhone', phone);
+      msg.innerHTML='<span style=color:green>✅ Karibu tena! Inafungua Notes...</span>';
+      setTimeout(()=> openNotes(phone), 800);
+      return;
+    } else {
+      // Kama ni mtu mwingine anajaribu kutumia code ya mtu - kataa
+      msg.innerHTML='<span style=color:red>❌ Hii code imeshatumika na namba nyingine!</span>';
+      return;
+    }
+  }
+  // 2. Code mpya - save kama APPROVED mara moja (AUTOMATIC)
+  let {error:insErr} = await supabaseClient.from('payments').insert([{phone:phone,code:code,amount:amount,status:'approved'}]);
+  if(insErr){msg.innerHTML='<span style=color:red>Error: '+insErr.message+'</span>';return;}
+  localStorage.setItem('paidPhone', phone);
+  msg.innerHTML='<span style=color:green>✅ Malipo yamethibitishwa! Inafungua Notes...</span>';
+  setTimeout(()=> openNotes(phone), 800);
+  document.getElementById('phone').value='';
+  document.getElementById('code').value='';
+}catch(e){msg.innerHTML='<span style=color:red>Error: '+e.message+'</span>';}
+}
+
+function adminLogin(){
+let p=document.getElementById('adminPass').value;
+if(p==='GradeX2026!'){localStorage.setItem('isAdmin','true');document.getElementById('adminLoginSection').classList.add('hidden');document.getElementById('adminSection').classList.remove('hidden');loadPayments();} else{document.getElementById('loginMsg').innerText='Wrong!';}
+}
+function adminLogout(){localStorage.removeItem('isAdmin');showTab('home');}
+async function loadPayments(){
+let list=document.getElementById('paymentsList');list.innerHTML='⏳ Loading...';
+let {data,error}=await supabaseClient.from('payments').select('*').order('created_at',{ascending:false}).limit(100);
+if(error){list.innerHTML='<p style=color:red>Error: '+error.message+'</p>';return;}
+if(!data||!data.length){list.innerHTML='<p>Hakuna malipo bado</p>';return;}
+let html='';data.forEach(row=>{
+let isFake=row.code&&row.code.length<10?'⚠️ FAKE!':'✅ Sawa';
+let time=row.created_at?new Date(row.created_at).toLocaleString():'';
+html+=`<div class="pay-item ${row.status==='approved'?'approved':''}"><b>📱 ${row.phone||'-'}</b> - ${isFake}<br>Code: <b>${row.code}</b> | ${row.status}<br><small>${time}</small><br><button onclick="deletePay('${row.id}')" style="background:red;width:auto;padding:8px 10px">✕ Delete</button></div>`;
+});
+list.innerHTML=html;
+}
+async function deletePay(id){if(!confirm('Futa?'))return;await supabaseClient.from('payments').delete().eq('id',id);loadPayments();}
+showTab('home');
+</script>
+</body>
+</html>
