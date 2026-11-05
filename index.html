@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GradeX CBE Kenya | Grade 7-12 Notes & Exams</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Arial,sans-serif}
+:root{--green:#0B5A2E;--green2:#0E7A3D;--gold:#D4A017;--gold2:#FFD700;--light:#F6F9F6;--dark:#0A2E18}
+body{background:var(--light);color:#222}
+a{text-decoration:none;color:inherit}
+
+/* NAV */
+nav{background:white;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.nav-inner{max-width:1100px;margin:auto;display:flex;align-items:center;justify-content:space-between;padding:10px 16px}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer}
+.logo-badge{width:48px;height:48px;border-radius:50%;background:var(--green);border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;color:white;font-size:22px;position:relative;flex-shrink:0}
+.logo-badge:after{content:"";position:absolute;inset:3px;border:1px dashed var(--gold2);border-radius:50%}
+.logo b{font-size:22px;color:var(--green);line-height:1;letter-spacing:.5px}
+.logo span{display:block;font-size:10px;letter-spacing:2.5px;color:var(--gold);font-weight:800}
+.nav-links{display:flex;gap:18px;align-items:center;font-weight:600;font-size:14px}
+.nav-links a{padding:8px 10px;border-radius:8px}
+.nav-links a:hover{background:#EAF5ED;color:var(--green)}
+.btn{background:var(--green);color:white!important;padding:10px 18px!important;border-radius:25px;font-weight:700}
+.btn-gold{background:var(--gold);color:#1A1A1A!important}
+.hamburger{display:none;font-size:26px;cursor:pointer}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0B5A2E 0%,#0E7A3D 55%,#0B5A2E 100%);color:white;overflow:hidden}
+.hero-inner{max-width:1100px;margin:auto;padding:42px 16px 36px;display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:center}
+.hero h1{font-size:44px;line-height:.95}
+.hero h1 span{color:var(--gold2)}
+.hero p{margin:16px 0;line-height:1.6;opacity:.95}
+.hero-badges{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.pill{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:7px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.hero-card{background:white;color:#222;border-radius:20px;padding:20px;box-shadow:0 15px 30px rgba(0,0,0,.25)}
+.hero-card h3{color:var(--green)}
+.hero-card input{width:100%;padding:12px;margin:8px 0;border:1.5px solid #ddd;border-radius:10px;font-size:15px}
+.hero-card button{width:100%;padding:13px;border:none;border-radius:10px;background:var(--green);color:white;font-weight:800;cursor:pointer;margin-top:6px}
+.hero-card button:active{transform:scale(.98)}
+.notice{background:#FFF8E1;border:1px solid #FFE082;padding:10px;border-radius:10px;font-size:13px;line-height:1.5;margin-top:10px}
+.trust{display:flex;gap:16px;margin-top:14px;font-size:13px;flex-wrap:wrap}
+.trust b{color:var(--gold2)}
+
+/* SECTIONS */
+.wrap{max-width:1100px;margin:auto;padding:24px 16px}
+.section-title{font-size:28px;color:var(--green);text-align:center}
+.section-sub{text-align:center;color:#666;margin:8px 0 20px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:white;border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.07);border:1px solid #eee;transition:.2s}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(0,0,0,.12)}
+.card-top{height:110px;background:linear-gradient(135deg,var(--green),#1A8A4A);display:flex;align-items:center;justify-content:center;color:white;font-size:42px;position:relative}
+.card-top span{position:absolute;top:10px;right:12px;background:var(--gold);color:#111;font-size:11px;font-weight:800;padding:4px 8px;border-radius:20px}
+.card-body{padding:16px}
+.card-body h3{color:var(--green)}
+.card-body p{font-size:13px;color:#666;line-height:1.5;margin:8px 0}
+.card-body ul{list-style:none;font-size:13px;margin:10px 0}
+.card-body li{padding:4px 0}
+.card-body li:before{content:"✓ ";color:var(--green);font-weight:900}
+.price{font-size:22px;font-weight:900;color:var(--green)}
+.price small{font-size:12px;color:#999;text-decoration:line-through}
+.card-body button{width:100%;padding:11px;border:none;border-radius:10px;background:var(--green);color:white;font-weight:800;cursor:pointer;margin-top:8px}
+.card-body button.gold{background:var(--gold);color:#111}
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:10px}
+.how div{background:white;padding:18px;border-radius:16px;text-align:center;border:1px solid #eee}
+.how b{font-size:32px}
+.notes-box{background:white;border-radius:16px;padding:20px;border:1px solid #E8F5E9}
+.notes-box a{display:block;background:#EAF5ED;padding:12px;border-radius:10px;margin:8px 0;font-weight:700;color:var(--green)}
+footer{background:var(--dark);color:white;text-align:center;padding:22px 16px;margin-top:20px}
+footer b{color:var(--gold2)}
+.hidden{display:none!important}
+.admin-box{background:white;max-width:700px;margin:20px auto;padding:20px;border-radius:16px}
+.pay-item{background:#F9F9F9;padding:12px;border-radius:10px;margin:10px 0;border-left:5px solid var(--green);font-size:14px}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;padding:28px 16px}
+  .hero h1{font-size:36px}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .how{grid-template-columns:1fr}
+  .nav-links{display:none;position:absolute;top:68px;left:0;right:0;background:white;flex-direction:column;padding:14px;box-shadow:0 10px 20px rgba(0,0,0,.1)}
+  .nav-links.open{display:flex}
+  .hamburger{display:block}
+}
+@media(max-width:520px){
+  .grid{grid-template-columns:1fr}
+  .hero h1{font-size:32px}
+  .logo b{font-size:19px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+<div class="nav-inner">
+  <div class="logo" id="logoClick">
+    <div class="logo-badge">🎓</div>
+    <div><b>GradeX</b><span>CBE KENYA</span></div>
+  </div>
+  <div class="nav-links" id="navLinks">
+    <a href="#home">Home</a>
+    <a href="#classes">Classes</a>
+    <a href="#how">How It Works</a>
+    <a href="#classes" class="btn">Get Notes • 20 Bob</a>
+  </div>
+  <div class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</div>
+</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+<div class="hero-inner">
+  <div>
+    <div class="pill">🇰🇪 CBC • CBE • COMPETENCY BASED EDUCATION</div>
+    <h1>Learn Smarter.<br><span>Score Higher.</span><br>GradeX.</h1>
+    <p>Professional CBE Notes, Exams, Marking Schemes
