@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GradeX - CBE NOTES KENYA | 20 BOB</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#f5f7fa;padding:15px}
+.logo-box{background:white;padding:20px;border-radius:15px;text-align:center;margin-bottom:15px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
+.header{background:linear-gradient(135deg,#0f5c2e,#1a8a4a);color:white;padding:25px;border-radius:15px;text-align:center;margin-bottom:20px}
+.card{background:white;padding:20px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.1);margin-bottom:15px}
+.lipa-box{background:#e8f5e9;border:2px dashed #1a8a4a;padding:20px;border-radius:12px;text-align:center}
+input{width:100%;padding:12px;margin:8px 0;border:2px solid #ddd;border-radius:8px;font-size:16px}
+button{width:100%;padding:14px;background:#1a8a4a;color:white;border:none;border-radius:8px;font-size:18px;font-weight:bold;cursor:pointer;margin-top:10px}
+.subjects{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+.sub{background:#f1f8e9;padding:12px;border-radius:8px;text-align:center;border-left:4px solid #1a8a4a}
+.blocked-msg{background:#ffebee;color:#c62828;padding:15px;border-radius:8px;text-align:center;font-weight:bold;display:none}
+</style>
+</head>
+<body>
+
+<div class="logo-box">
+<svg width="160" height="120" viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg">
+  <path d="M100 5 L160 25 L100 45 L40 25 Z" fill="#ffcc00"/>
+  <path d="M15 30 L70 40 L70 110 L15 100 Z" fill="#0f5c2e"/>
+  <path d="M20 35 L65 42 L65 102 L20 95 Z" fill="white"/>
+  <path d="M85 35 L115 75 L145 35 L125 35 L115 50 L105 35 Z" fill="#0f5c2e"/>
+  <path d="M85 115 L115 75 L145 115 L125 115 L115 100 L105 115 Z" fill="#ffcc00"/>
+</svg>
+<h2 style="color:#0f5c2e;font-size:32px;">GradeX</h2>
+<p style="color:#ff9800;font-weight:bold;letter-spacing:3px;font-size:12px;">CBE NOTES • KENYA</p>
+</div>
+
+<div class="header">
+<h1>CBE NOTES 2026</h1>
+<p style="background:#ffcc00;color:#000;display:inline-block;padding:5px 15px;border-radius:20px;font-weight:bold;margin-top:10px">CBE Core 2026</p>
+<div style="margin-top:15px;font-size:18px">Notes Zote kwa <b style="color:#ffcc00">20 BOB / DAY</b> tu!</div>
+</div>
+
+<div class="card lipa-box">
+<h3>🔒 Lipa Kwanza Ndio Upate Notes</h3>
+<p>Tuma <b>Ksh 20</b> kwa:</p>
+<p style="font-size:20px;font-weight:bold;color:#0f5c2e">Pochi la Biashara<br>0790777917<br>Frenky</p>
+<input id="phone" type="tel" placeholder="Namba yako 07...">
+<input id="mpesaCode" type="text" placeholder="M-Pesa Code: QJD8...">
+<button onclick="verifyPayment()">✅ Thibitisha Malipo</button>
+<div id="blockedBox" class="blocked-msg" style="margin-top:15px"></div>
+<div id="status" style="margin-top:10px;font-weight:bold"></div>
+</div>
+
+<div class="card" id="notesSection" style="display:none">
+<h3>📚 CORE SUBJECTS</h3>
+<div class="subjects">
+<div class="sub">📘 English</div><div class="sub">📗 Kiswahili</div>
+<div class="sub">🔢 Mathematics</div><div class="sub">🧪 Chemistry</div>
+<div class="sub">⚛️ Physics</div><div class="sub">🌱 Biology</div>
+<div class="sub">💻 Computer</div><div class="sub">⛪ CRE / IRE</div>
+</div>
+</div>
+
+<script>
+let attempts = JSON.parse(localStorage.getItem('gradex_attempts') || '{}');
+let blockUntil = JSON.parse(localStorage.getItem('gradex_block') || '{}');
+let usedCodes = JSON.parse(localStorage.getItem('gradex_usedCodes') || '[]');
+function checkBlock(phone){
+  if(blockUntil[phone] && Date.now() < blockUntil[phone]){
+    let mins = Math.ceil((blockUntil[phone]-Date.now())/60000);
+    let msg = `⛔ UME-BLOCKIWA! Pumzika dakika ${mins}`;
+    document.getElementById('blockedBox').style.display='block';
+    document.getElementById('blockedBox').innerText=msg;
+    return msg;
+  }
+  document.getElementById('blockedBox').style.display='none';
+  return null;
+}
+function verifyPayment(){
+  let phone = document.getElementById('phone').value.trim();
+  let code = document.getElementById('mpesaCode').value.trim().toUpperCase();
+  let status = document.getElementById('status');
+  if(phone.length < 10){ alert("Weka namba sahihi"); return; }
+  if(code.length < 8){ alert("Weka Code sahihi"); return; }
+  let blockMsg = checkBlock(phone);
+  if(blockMsg){ status.innerHTML=`<span style="color:red">${blockMsg}</span>`; return; }
+  if(usedCodes.includes(code)){
+    attempts[phone] = (attempts[phone] || 0) + 1;
+    localStorage.setItem('gradex_attempts', JSON.stringify(attempts));
+    if(attempts[phone] >= 3){
+      blockUntil[phone] = Date.now() + (attempts[phone]==3?10*60*1000:60*60*1000);
+      localStorage.setItem('gradex_block', JSON.stringify(blockUntil));
+      status.innerHTML=`<span style="color:red">⛔ BLOCK ${attempts[phone]==3?10:60} MIN!</span>`;
+      checkBlock(phone);
+    } else {
+      status.innerHTML=`<span style="color:orange">Code imetumika! ${attempts[phone]}/3</span>`;
+    }
+    return;
+  }
+  usedCodes.push(code);
+  localStorage.setItem('gradex_usedCodes', JSON.stringify(usedCodes));
+  attempts[phone]=0;
+  localStorage.setItem('gradex_attempts', JSON.stringify(attempts));
+  status.innerHTML=`<span style="color:green">✅ Malipo yamekubaliwa!</span>`;
+  document.getElementById('notesSection').style.display='block';
+}
+</script>
+</body>
+</html>
