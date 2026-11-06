@@ -1,32 +1,71 @@
 <!DOCTYPE html>
-<html>
+<html lang="sw">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GradeX Admin</title>
+<title>Admin - GradeX Kenya</title>
 <style>
-body{font-family:Arial;background:#0f5c2e;display:flex;justify-content:center;align-items:center;height:100vh;margin:0}
-.card{background:white;padding:25px;border-radius:15px;width:90%;max-width:350px;text-align:center}
-input{width:100%;padding:12px;margin:10px 0;border-radius:8px;border:1px solid #ccc;box-sizing:border-box}
-button{background:#0f5c2e;color:white;border:none;padding:12px;width:100%;border-radius:8px;font-weight:bold}
+body{font-family:Arial,sans-serif;background:#f1f5f9;padding:15px}
+.box{background:white;padding:18px;border-radius:12px;max-width:500px;margin:auto;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
+h2{text-align:center;color:#0f172a}
+input{width:100%;padding:12px;border:1px solid #ccc;border-radius:10px;margin:8px 0;box-sizing:border-box}
+button{width:100%;padding:13px;background:#16a34a;color:white;border:none;border-radius:10px;font-weight:bold;font-size:16px;cursor:pointer}
+button.red{background:#dc2626}
+.small{font-size:13px;color:#64748b;text-align:center}
+.success{background:#dcfce7;padding:10px;border-radius:10px;text-align:center;margin:10px 0;display:none}
 </style>
 </head>
 <body>
-<div class="card">
-<h2>🔐 GradeX Admin</h2>
-<input type="password" id="pass" placeholder="Weka Password">
-<button onclick="login()">Login</button>
-<p id="msg" style="color:red"></p>
+<div class="box">
+<h2>Admin - Thibitisha Malipo</h2>
+<p class="small">Hakuna code ya jumla tena. Kila mwanafunzi lazima alipe kwanza.</p>
+
+<label>M-Pesa Code aliyotuma mwanafunzi:</label>
+<input id="mpesaCode" placeholder="Mfano: QK123ABC456 - kutoka SMS ya M-Pesa">
+
+<label>Jina la Mwanafunzi / Namba ya Simu:</label>
+<input id="studentPhone" placeholder="Mfano: 0712345678">
+
+<button onclick="thibitisha()">Thibitisha Malipo na Ongeza Siku 60</button>
+
+<div id="ok" class="success"></div>
+
+<p class="small" style="margin-top:15px">
+<b>Jinsi ya kuthibitisha:</b><br>
+1. Fungua M-Pesa App yako, angalia kama hiyo Code iko kwenye messages zako.<br>
+2. Kama pesa imeingia KSh 20, bonyeza button hapo juu.<br>
+3. Mwanafunzi atapata siku 60 mpya.
+</p>
+
+<button class="red" onclick="localStorage.clear();alert('Imesafishwa')">Futa Kumbukumbu Zote</button>
 </div>
+
 <script>
-function login(){
-  let p = document.getElementById('pass').value;
-  if(p === 'admin123'){
-    localStorage.setItem('isAdmin','true');
-    alert('Karibu Admin!');
-    window.location.href = 'index.html';
-  }else{
-    document.getElementById('msg').innerText = 'Password sio sahihi! Jaribu: admin123';
+function thibitisha(){
+  var code = document.getElementById('mpesaCode').value.trim();
+  var phone = document.getElementById('studentPhone').value.trim();
+  if(code.length < 5){ alert('Weka M-Pesa Code sahihi kutoka SMS'); return; }
+  if(phone.length < 9){ alert('Weka namba ya simu ya mwanafunzi'); return; }
+
+  // Zuia code kutumika mara mbili
+  var used = JSON.parse(localStorage.getItem('usedCodes') || '[]');
+  if(used.includes(code)){
+    alert('Hii Code imeshatumika! Mwanafunzi alipe nyingine mpya.');
+    return;
   }
+  used.push(code);
+  localStorage.setItem('usedCodes', JSON.stringify(used));
+
+  // Ongeza siku 30
+  var expiry = new Date();
+  expiry.setDate(expiry.getDate() + 60);
+  localStorage.setItem('expiry_'+phone, expiry.toString());
+
+  var ok = document.getElementById('ok');
+  ok.style.display = 'block';
+  ok.innerHTML = 'Imethibitishwa! <br> Mwanafunzi: ' + phone + '<br> Code: ' + code + '<br> Mwisho mpya: ' + expiry.toDateString();
+  document.getElementById('mpesaCode').value = '';
+  alert('Imefanikiwa! Mwanafunzi sasa ana siku 60.');
 }
 </script>
 </body>
