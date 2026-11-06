@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lipa na M-Pesa - GradeX</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f0fdf4;padding:15px}
+.box{background:white;padding:20px;border-radius:14px;max-width:400px;margin:auto;box-shadow:0 2px 12px rgba(0,0,0,0.1);text-align:center}
+h2{color:#15803d}
+input{width:100%;padding:13px;border:1px solid #ccc;border-radius:10px;margin:10px 0;box-sizing:border-box;font-size:16px}
+button{width:100%;padding:14px;background:#16a34a;color:white;border:none;border-radius:10px;font-weight:bold;font-size:17px;cursor:pointer}
+.info{background:#fef9c3;padding:12px;border-radius:10px;font-size:14px;margin:10px 0}
+#msg{margin-top:12px;font-size:14px}
+</style>
+</head>
+<body>
+<div class="box">
+<h2>Lipa na M-Pesa</h2>
+<p><b>GradeX Kenya - KSh 20 / Siku 60</b></p>
+
+<div class="info">
+Lipa kwa Till yako, halafu weka Code ya M-Pesa uliyotumiwa kwa SMS hapa chini.
+</div>
+
+<label style="text-align:left;display:block">Namba ya Simu:</label>
+<input id="phone" placeholder="0712345678" type="tel">
+
+<label style="text-align:left;display:block">M-Pesa Code kutoka SMS:</label>
+<input id="mpesaCode" placeholder="Mfano: QK123ABC456">
+
+<button onclick="lipa()">Thibitisha Malipo</button>
+
+<p id="msg"></p>
+</div>
+
+<script>
+function lipa(){
+  var phone = document.getElementById('phone').value.trim();
+  var code = document.getElementById('mpesaCode').value.trim().toUpperCase();
+  var msg = document.getElementById('msg');
+
+  if(phone.length < 10){ msg.innerHTML = '❌ Weka namba sahihi ya simu'; msg.style.color='red'; return; }
+  if(code.length < 8){ msg.innerHTML = '❌ Weka M-Pesa Code sahihi kutoka SMS'; msg.style.color='red'; return; }
+
+  // Zuia code kutumika mara mbili
+  var used = JSON.parse(localStorage.getItem('usedMpesaCodes') || '[]');
+  if(used.includes(code)){
+    msg.innerHTML = '❌ Hii Code imeshatumika! Lipa nyingine mpya.';
+    msg.style.color='red';
+    return;
+  }
+
+  // Hifadhi code iliyotumika
+  used.push(code);
+  localStorage.setItem('usedMpesaCodes', JSON.stringify(used));
+
+  // Ongeza siku 60
+  var expiry = new Date();
+  expiry.setDate(expiry.getDate() + 60);
+  localStorage.setItem('gradeX_expiry', expiry.toString());
+  localStorage.setItem('gradeX_phone', phone);
+
+  msg.innerHTML = '✅ Malipo yamethibitishwa! <br> Mwisho wako mpya ni: ' + expiry.toDateString();
+  msg.style.color='green';
+  alert('Asante! Umepata siku 60 mpya.');
+}
+</script>
+</body>
+</html>
