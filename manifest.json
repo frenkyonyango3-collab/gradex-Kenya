@@ -1,19 +1,32 @@
-<body>
-
-<!-- LOGO MPYA YA GRADEX -->
-<div style="text-align:center; background:white; padding:15px; border-radius:15px; margin-bottom:15px; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
-  <img src="logo.png" style="width:150px;">
-</div>
-
-<!-- HAPA NDIPO ILE CODE YAKO YA AWALI INAANZA... -->
-
-s<!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GradeX - CBE NOTES 20 BOB</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>GradeX - CBE NOTES 20 BOB</title>
+
+    <!-- PWA SETTINGS -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#065f46">
+
+    <!-- iPhone installation support -->
+    <link rel="apple-touch-icon" href="./icons/icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="GradeX">
 </head>
+
 <body>
-... (ile code yote nimeiweka tayari)
+
+    <!-- GRADEX LOGO -->
+    <div style="text-align:center; background:white; padding:15px;
+        border-radius:15px; margin-bottom:15px;
+        box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+
+        <img src="./logo.png" alt="GradeX Logo" style="width:150px;">
+    </div>
+
+    <!-- KEEP ALL YOUR ORIGINAL GRADEX WEBSITE CODE BELOW THIS LINE -->
+
 </body>
 </html>
