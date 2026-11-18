@@ -1,32 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>GradeX - CBE NOTES 20 BOB</title>
-
-    <!-- PWA SETTINGS -->
-    <link rel="manifest" href="./manifest.json">
-    <meta name="theme-color" content="#065f46">
-
-    <!-- iPhone installation support -->
-    <link rel="apple-touch-icon" href="./icons/icon-192.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="GradeX">
-</head>
-
-<body>
-
-    <!-- GRADEX LOGO -->
-    <div style="text-align:center; background:white; padding:15px;
-        border-radius:15px; margin-bottom:15px;
-        box-shadow:0 2px 10px rgba(0,0,0,0.1);">
-
-        <img src="./logo.png" alt="GradeX Logo" style="width:150px;">
-    </div>
-
-    <!-- KEEP ALL YOUR ORIGINAL GRADEX WEBSITE CODE BELOW THIS LINE -->
-
-</body>
-</html>
+{
+  "name": "GradeX CBE Notes Kenya",
+  "short_name": "GradeX",
+  "description": "GradeX CBE Notes Kenya provides learning materials, revision notes, quizzes, and educational resources for students in Grades 7–12.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#065f46",
+  "lang": "en",
+  "categories": [
+    "education",
+    "learning",
+    "books"
+  ],
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
