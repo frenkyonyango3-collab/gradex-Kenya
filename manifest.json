@@ -1,19 +1,34 @@
-<body>
-
-<!-- LOGO MPYA YA GRADEX -->
-<div style="text-align:center; background:white; padding:15px; border-radius:15px; margin-bottom:15px; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
-  <img src="logo.png" style="width:150px;">
-</div>
-
-<!-- HAPA NDIPO ILE CODE YAKO YA AWALI INAANZA... -->
-
-s<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GradeX - CBE NOTES 20 BOB</title>
-</head>
-<body>
-... (ile code yote nimeiweka tayari)
-</body>
-</html>
+{
+  "name": "GradeX - CBE Notes & AI Tutor",
+  "short_name": "GradeX",
+  "description": "Grade 7 - 12 CBE Notes, Quizzes na AI Tutor. KSh 20 / day na M-Pesa.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#A3FF12",
+  "lang": "en",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
