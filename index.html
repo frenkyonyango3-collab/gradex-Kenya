@@ -148,6 +148,19 @@ function logout(){
         });
     });
   }
+</script><!-- GradeX Service Worker Registration -->
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./service-worker.js")
+        .then((registration) => {
+          console.log("GradeX Service Worker registered successfully:", registration.scope);
+        })
+        .catch((error) => {
+          console.error("GradeX Service Worker registration failed:", error);
+        });
+    });
+  }
 </script>
 </body>
 </html>
